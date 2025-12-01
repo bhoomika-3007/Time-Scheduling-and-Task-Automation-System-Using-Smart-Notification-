@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVN University - Timetable Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Page Sections */
+        .page {
+            display: none;
+            min-height: 80vh;
+            padding: 2rem 0;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        
+        nav a:hover {
+            color: var(--secondary);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #1a2530);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            background: var(--secondary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon i {
+            font-size: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        /* Timetable Preview */
+        .timetable-preview {
+            background: white;
+            padding: 3rem 0;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+        
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        
+        .timetable th, .timetable td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .timetable th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .timetable td {
+            height: 80px;
+            vertical-align: top;
+        }
+        
+        .course {
+            background: var(--secondary);
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .course.conflict {
+            background: var(--danger);
+        }
+        
+        .course.lab {
+            background: var(--warning);
+        }
+        
+        .timetable-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .timetable-selector button {
+            padding: 8px 16px;
+            background: var(--light);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .timetable-selector button.active {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 4rem 0;
+            background: #f8f9fa;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 0 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 3rem;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--secondary);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--secondary), #2980b9);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 2px;
+            background: var(--secondary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        /* Login/Signup Forms */
+        .auth-form {
+            background: white;
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-options a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .form-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* Demo Page */
+        .demo-container {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+        
+        .demo-video {
+            width: 100%;
+            height: 400px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .demo-video i {
+            font-size: 4rem;
+            color: white;
+            z-index: 1;
+            cursor: pointer;
+            position: absolute;
+        }
+        
+        .demo-steps {
+            margin-top: 2rem;
+        }
+        
+        .demo-step {
+            display: flex;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+        
+        .demo-step-number {
+            background: var(--secondary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        /* Feature Detail Page */
+        .feature-detail {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+        
+        .feature-detail-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-detail-icon {
+            background: var(--secondary);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+        }
+        
+        .feature-detail-icon i {
+            font-size: 1.8rem;
+        }
+        
+        .feature-detail-content {
+            margin-bottom: 2rem;
+        }
+        
+        .feature-benefits {
+            margin-top: 2rem;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-item i {
+            color: var(--success);
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .conflict-example {
+            background: #ffeaea;
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .mobile-preview {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .mobile-frame {
+            width: 300px;
+            height: 600px;
+            background: #2c3e50;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .mobile-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .mobile-header {
+            background: var(--secondary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .mobile-content {
+            padding: 15px;
+        }
+        
+        .mobile-class {
+            background: var(--light);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        
+        .notification-list {
+            margin-top: 2rem;
+        }
+        
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-icon {
+            background: var(--secondary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        /* Back Button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: var(--secondary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .back-button i {
+            margin-right: 5px;
+        }
+        
+        /* Animated Demo Video */
+        .demo-animation {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-screen {
+            width: 80%;
+            height: 70%;
+            background: white;
+            border-radius: 8px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .demo-header {
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .demo-content {
+            padding: 15px;
+            height: calc(100% - 50px);
+            position: relative;
+        }
+        
+        .demo-timetable {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+        }
+        
+        .demo-timetable th, .demo-timetable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .demo-timetable th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .demo-course {
+            background: var(--secondary);
+            color: white;
+            padding: 3px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            margin-bottom: 2px;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: white;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .element-1 {
+            top: 20px;
+            right: 20px;
+            animation-delay: 0s;
+        }
+        
+        .element-2 {
+            bottom: 20px;
+            left: 20px;
+            animation-delay: 1s;
+        }
+        
+        .element-3 {
+            top: 50%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+        
+        /* Success Message */
+        .success-message {
+            background-color: var(--success);
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .steps {
+                flex-direction: column;
+            }
+            
+            .feature-detail-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .feature-detail-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .mobile-frame {
+                width: 250px;
+                height: 500px;
+            }
+            
+            .demo-animation {
+                height: 300px;
+            }
+            
+            .demo-screen {
+                width: 90%;
+                height: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="showPage('home')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h1>MVN University</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a onclick="showPage('features')">Features</a></li>
+                        <li><a onclick="showPage('how-it-works')">How It Works</a></li>
+                        <li><a onclick="showPage('testimonials')">Testimonials</a></li>
+                        <li><a onclick="showPage('contact')">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline" onclick="showPage('login')">Login</button>
+                    <button class="btn btn-primary" onclick="showPage('signup')">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <section id="home" class="page active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h2>MVN University Timetable Management</h2>
+                <p>MVN University helps faculty, and students create, manage, and view class schedules with ease. Say goodbye to scheduling conflicts and time-consuming timetable creation.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="showPage('signup')">Get Started Now</button>
+                    <button class="btn btn-outline" onclick="showPage('demo')">Watch Demo</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Powerful Features</h2>
+                    <p>MVN University offers a comprehensive set of tools to streamline timetable management for everyone in the university ecosystem.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="showFeatureDetail('schedule-creation')">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <h3>Easy Schedule Creation</h3>
+                        <p>Create and modify timetables with our intuitive drag-and-drop interface. Add courses, assign rooms, and set time slots in minutes.</p>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDetail('conflict-detection')">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Conflict Detection</h3>
+                        <p>Automatically detect scheduling conflicts for faculty, rooms, and students before finalizing the timetable.</p>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDetail('mobile-access')">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile Access</h3>
+                        <p>Access your timetable on any device. Our responsive design works perfectly on smartphones, tablets, and desktops.</p>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDetail('notifications')">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>Real-time Notifications</h3>
+                        <p>Get instant notifications about schedule changes, room changes, or cancellations directly to your device.</p>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDetail('analytics')">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Analytics & Reports</h3>
+                        <p>Generate reports on room utilization, faculty workload, and student attendance patterns to optimize resources.</p>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDetail('integration')">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync"></i>
+                        </div>
+                        <h3>Integration Ready</h3>
+                        <p>Seamlessly integrate with existing university systems like student information systems and learning management platforms.</p>
+                    </div>
+                </div>
+                
+                <!-- Timetable Preview -->
+                <div class="timetable-preview">
+                    <div class="section-title">
+                        <h2>Sample Timetables</h2>
+                        <p>See how MVN University presents timetables in a clean, organized format</p>
+                    </div>
+                    <div class="timetable-selector">
+                        <button class="active" onclick="showTimetable(1)">Computer Science</button>
+                        <button onclick="showTimetable(2)">Engineering</button>
+                        <button onclick="showTimetable(3)">Business</button>
+                        <button onclick="showTimetable(4)">B.Pharmacy</button>
+                        <button onclick="showTimetable(5)">BA LLB</button>
+                    </div>
+                    <div class="container">
+                        <div id="timetable-1" class="timetable-container">
+                            <table class="timetable">
+                                <thead>
+                                    <tr>
+                                        <th>Time/Day</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>9:00 - 10:30</td>
+                                        <td><div class="course">CS101 - Room A101</div></td>
+                                        <td></td>
+                                        <td><div class="course">MATH201 - Room B205</div></td>
+                                        <td></td>
+                                        <td><div class="course">CS101 - Room A101</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10:45 - 12:15</td>
+                                        <td><div class="course lab">PHY101 - Lab 3</div></td>
+                                        <td><div class="course">CS101 - Room A101</div></td>
+                                        <td></td>
+                                        <td><div class="course">ENG102 - Room C304</div></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1:15 - 2:45</td>
+                                        <td></td>
+                                        <td><div class="course">MATH201 - Room B205</div></td>
+                                        <td><div class="course lab">PHY101 - Lab 3</div></td>
+                                        <td></td>
+                                        <td><div class="course">ENG102 - Room C304</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3:00 - 4:30</td>
+                                        <td><div class="course">ENG102 - Room C304</div></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><div class="course">CS101 - Room A101</div></td>
+                                        <td><div class="course">MATH201 - Room B205</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="timetable-2" class="timetable-container" style="display: none;">
+                            <table class="timetable">
+                                <thead>
+                                    <tr>
+                                        <th>Time/Day</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>9:00 - 10:30</td>
+                                        <td><div class="course">MECH301 - Lab A</div></td>
+                                        <td><div class="course">ELEC202 - Room D102</div></td>
+                                        <td></td>
+                                        <td><div class="course">MECH301 - Lab A</div></td>
+                                        <td><div class="course">CIV101 - Room E205</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10:45 - 12:15</td>
+                                        <td><div class="course">ELEC202 - Room D102</div></td>
+                                        <td><div class="course lab">CIV101 - Lab 2</div></td>
+                                        <td><div class="course">MECH301 - Lab A</div></td>
+                                        <td></td>
+                                        <td><div class="course">MAT301 - Room F104</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1:15 - 2:45</td>
+                                        <td><div class="course">MAT301 - Room F104</div></td>
+                                        <td></td>
+                                        <td><div class="course lab">CIV101 - Lab 2</div></td>
+                                        <td><div class="course">ELEC202 - Room D102</div></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3:00 - 4:30</td>
+                                        <td></td>
+                                        <td><div class="course">MAT301 - Room F104</div></td>
+                                        <td><div class="course">CIV101 - Room E205</div></td>
+                                        <td><div class="course lab">CIV101 - Lab 2</div></td>
+                                        <td><div class="course">MECH301 - Lab A</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="timetable-3" class="timetable-container" style="display: none;">
+                            <table class="timetable">
+                                <thead>
+                                    <tr>
+                                        <th>Time/Day</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>9:00 - 10:30</td>
+                                        <td><div class="course">ACC101 - Room G201</div></td>
+                                        <td><div class="course">MKT201 - Room H105</div></td>
+                                        <td></td>
+                                        <td><div class="course">ACC101 - Room G201</div></td>
+                                        <td><div class="course">FIN301 - Room I303</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10:45 - 12:15</td>
+                                        <td><div class="course">MKT201 - Room H105</div></td>
+                                        <td><div class="course">MGMT101 - Room J402</div></td>
+                                        <td><div class="course">ACC101 - Room G201</div></td>
+                                        <td><div class="course">FIN301 - Room I303</div></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1:15 - 2:45</td>
+                                        <td><div class="course">FIN301 - Room I303</div></td>
+                                        <td><div class="course">ACC101 - Room G201</div></td>
+                                        <td><div class="course">MGMT101 - Room J402</div></td>
+                                        <td></td>
+                                        <td><div class="course">MKT201 - Room H105</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3:00 - 4:30</td>
+                                        <td><div class="course">MGMT101 - Room J402</div></td>
+                                        <td></td>
+                                        <td><div class="course">FIN301 - Room I303</div></td>
+                                        <td><div class="course">MKT201 - Room H105</div></td>
+                                        <td><div class="course">MGMT101 - Room J402</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="timetable-4" class="timetable-container" style="display: none;">
+                            <table class="timetable">
+                                <thead>
+                                    <tr>
+                                        <th>Time/Day</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>9:00 - 10:30</td>
+                                        <td><div class="course">PHARM101 - Room P101</div></td>
+                                        <td><div class="course">BIOC201 - Room P205</div></td>
+                                        <td></td>
+                                        <td><div class="course">PHARM101 - Room P101</div></td>
+                                        <td><div class="course">ANAT301 - Room P303</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10:45 - 12:15</td>
+                                        <td><div class="course">BIOC201 - Room P205</div></td>
+                                        <td><div class="course lab">PHARM101 - Lab 4</div></td>
+                                        <td><div class="course">PHARM101 - Room P101</div></td>
+                                        <td><div class="course">ANAT301 - Room P303</div></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1:15 - 2:45</td>
+                                        <td><div class="course">ANAT301 - Room P303</div></td>
+                                        <td><div class="course">PHARM101 - Room P101</div></td>
+                                        <td><div class="course lab">BIOC201 - Lab 4</div></td>
+                                        <td></td>
+                                        <td><div class="course">BIOC201 - Room P205</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3:00 - 4:30</td>
+                                        <td><div class="course lab">PHARM101 - Lab 4</div></td>
+                                        <td></td>
+                                        <td><div class="course">ANAT301 - Room P303</div></td>
+                                        <td><div class="course">BIOC201 - Room P205</div></td>
+                                        <td><div class="course lab">BIOC201 - Lab 4</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="timetable-5" class="timetable-container" style="display: none;">
+                            <table class="timetable">
+                                <thead>
+                                    <tr>
+                                        <th>Time/Day</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>9:00 - 10:30</td>
+                                        <td><div class="course">LAW101 - Room L101</div></td>
+                                        <td><div class="course">POL201 - Room L205</div></td>
+                                        <td></td>
+                                        <td><div class="course">LAW101 - Room L101</div></td>
+                                        <td><div class="course">CON301 - Room L303</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10:45 - 12:15</td>
+                                        <td><div class="course">POL201 - Room L205</div></td>
+                                        <td><div class="course">ECON101 - Room L402</div></td>
+                                        <td><div class="course">LAW101 - Room L101</div></td>
+                                        <td><div class="course">CON301 - Room L303</div></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1:15 - 2:45</td>
+                                        <td><div class="course">CON301 - Room L303</div></td>
+                                        <td><div class="course">LAW101 - Room L101</div></td>
+                                        <td><div class="course">ECON101 - Room L402</div></td>
+                                        <td></td>
+                                        <td><div class="course">POL201 - Room L205</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3:00 - 4:30</td>
+                                        <td><div class="course">ECON101 - Room L402</div></td>
+                                        <td></td>
+                                        <td><div class="course">CON301 - Room L303</div></td>
+                                        <td><div class="course">POL201 - Room L205</div></td>
+                                        <td><div class="course">ECON101 - Room L402</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works">
+            <div class="container">
+                <div class="section-title">
+                    <h2>How MVN University Works</h2>
+                    <p>Our platform simplifies timetable management in just a few easy steps</p>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Input Course Data</h3>
+                        <p>Add courses, faculty, rooms, and student groups to the system.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Generate Schedule</h3>
+                        <p>Use our algorithm to automatically create an optimal timetable.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Review & Adjust</h3>
+                        <p>Review the generated schedule and make manual adjustments if needed.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Publish & Share</h3>
+                        <p>Publish the final timetable and share it with students and faculty.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials">
+            <div class="container">
+                <div class="section-title">
+                    <h2>What Our Users Say</h2>
+                    <p>MVN University faculty and students are already benefiting from our timetable management system</p>
+                </div>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "MVN University timetable system has cut our timetable creation time by 70%. The conflict detection feature alone has saved us countless hours of manual checking."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">NP</div>
+                            <div>
+                                <h4>NP Singh</h4>
+                                <p>Registrar, MVN University</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "As a faculty member, I love how easy it is to check my schedule and request changes. The mobile app is particularly useful when I'm on the go."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AS</div>
+                            <div>
+                                <h4>Amit Sagu</h4>
+                                <p>Professor of Computer Science</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "The student portal makes it so simple to view my class schedule and receive notifications about any changes. No more showing up to empty classrooms!"
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">BS</div>
+                            <div>
+                                <h4>Bhoomika Sharma</h4>
+                                <p>Student, Engineering Department</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <h2>Ready to Simplify Your Timetable Management?</h2>
+                <p>Join MVN University in streamlining scheduling processes.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="showPage('signup')">Start Free Trial</button>
+                    <button class="btn btn-outline" onclick="showPage('demo')">Request a Demo</button>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Features Page -->
+    <section id="features" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </div>
+            <div class="section-title">
+                <h2>All Features</h2>
+                <p>Explore the complete set of features that make MVN University the perfect solution for timetable management</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" onclick="showFeatureDetail('schedule-creation')">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                    <h3>Easy Schedule Creation</h3>
+                    <p>Create and modify timetables with our intuitive drag-and-drop interface. Add courses, assign rooms, and set time slots in minutes.</p>
+                </div>
+                <div class="feature-card" onclick="showFeatureDetail('conflict-detection')">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Conflict Detection</h3>
+                    <p>Automatically detect scheduling conflicts for faculty, rooms, and students before finalizing the timetable.</p>
+                </div>
+                <div class="feature-card" onclick="showFeatureDetail('mobile-access')">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Access</h3>
+                    <p>Access your timetable on any device. Our responsive design works perfectly on smartphones, tablets, and desktops.</p>
+                </div>
+                <div class="feature-card" onclick="showFeatureDetail('notifications')">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Real-time Notifications</h3>
+                    <p>Get instant notifications about schedule changes, room changes, or cancellations directly to your device.</p>
+                </div>
+                <div class="feature-card" onclick="showFeatureDetail('analytics')">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Analytics & Reports</h3>
+                    <p>Generate reports on room utilization, faculty workload, and student attendance patterns to optimize resources.</p>
+                </div>
+                <div class="feature-card" onclick="showFeatureDetail('integration')">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <h3>Integration Ready</h3>
+                    <p>Seamlessly integrate with existing university systems like student information systems and learning management platforms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Detail Pages -->
+    <section id="schedule-creation" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('features')">
+                <i class="fas fa-arrow-left"></i> Back to Features
+            </div>
+            <div class="feature-detail">
+                <div class="feature-detail-header">
+                    <div class="feature-detail-icon">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                    <div>
+                        <h2>Easy Schedule Creation</h2>
+                        <p>Create and manage university timetables with our intuitive interface</p>
+                    </div>
+                </div>
+                <div class="feature-detail-content">
+                    <p>Our drag-and-drop interface makes timetable creation simple and efficient. Administrators can easily add courses, assign faculty, allocate rooms, and set time slots without any technical expertise.</p>
+                    
+                    <div class="feature-benefits">
+                        <h3>Key Benefits</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Intuitive Interface</h4>
+                                <p>No training required - the interface is designed for ease of use</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Drag & Drop Functionality</h4>
+                                <p>Easily move courses, change time slots, and reassign rooms with simple drag-and-drop actions</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Template System</h4>
+                                <p>Save time by using pre-built templates for different departments or semesters</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Bulk Operations</h4>
+                                <p>Make changes to multiple courses or time slots simultaneously</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="conflict-detection" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('features')">
+                <i class="fas fa-arrow-left"></i> Back to Features
+            </div>
+            <div class="feature-detail">
+                <div class="feature-detail-header">
+                    <div class="feature-detail-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div>
+                        <h2>Conflict Detection</h2>
+                        <p>Automatically identify and resolve scheduling conflicts</p>
+                    </div>
+                </div>
+                <div class="feature-detail-content">
+                    <p>Our advanced algorithm scans timetables for potential conflicts before they become problems. The system checks for faculty double-bookings, room availability issues, and student schedule overlaps.</p>
+                    
+                    <div class="conflict-example">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Example Conflict Detected:</h4>
+                        <p>Professor Johnson is scheduled to teach CS101 in Room A101 and MATH201 in Room B205 at the same time (Monday 9:00-10:30).</p>
+                    </div>
+                    
+                    <div class="feature-benefits">
+                        <h3>How It Works</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Real-time Detection</h4>
+                                <p>Conflicts are identified as you build the timetable, not after it's completed</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Smart Suggestions</h4>
+                                <p>Receive intelligent recommendations for resolving detected conflicts</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Multiple Conflict Types</h4>
+                                <p>Detects faculty, room, and student conflicts with detailed explanations</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Conflict History</h4>
+                                <p>Track and review previously resolved conflicts for future planning</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mobile-access" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('features')">
+                <i class="fas fa-arrow-left"></i> Back to Features
+            </div>
+            <div class="feature-detail">
+                <div class="feature-detail-header">
+                    <div class="feature-detail-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div>
+                        <h2>Mobile Access</h2>
+                        <p>Access your timetable anytime, anywhere</p>
+                    </div>
+                </div>
+                <div class="feature-detail-content">
+                    <p>Our responsive design ensures that students, faculty, and administrators can access timetables and manage schedules from any device. The mobile experience is optimized for quick viewing and easy navigation.</p>
+                    
+                    <div class="mobile-preview">
+                        <div class="mobile-frame">
+                            <div class="mobile-screen">
+                                <div class="mobile-header">
+                                    <h3>My Schedule</h3>
+                                    <p>Monday, October 16</p>
+                                </div>
+                                <div class="mobile-content">
+                                    <div class="mobile-class">
+                                        <strong>CS101 - Programming</strong>
+                                        <p>9:00-10:30 • Room A101</p>
+                                    </div>
+                                    <div class="mobile-class">
+                                        <strong>MATH201 - Calculus</strong>
+                                        <p>1:15-2:45 • Room B205</p>
+                                    </div>
+                                    <div class="mobile-class">
+                                        <strong>PHY101 - Physics Lab</strong>
+                                        <p>3:00-4:30 • Lab 3</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-benefits">
+                        <h3>Mobile Features</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Responsive Design</h4>
+                                <p>Optimized experience on smartphones, tablets, and desktops</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Offline Access</h4>
+                                <p>View your timetable even without an internet connection</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Push Notifications</h4>
+                                <p>Receive instant updates about schedule changes</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Calendar Integration</h4>
+                                <p>Sync with your device's calendar application</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="notifications" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('features')">
+                <i class="fas fa-arrow-left"></i> Back to Features
+            </div>
+            <div class="feature-detail">
+                <div class="feature-detail-header">
+                    <div class="feature-detail-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div>
+                        <h2>Real-time Notifications</h2>
+                        <p>Stay informed about schedule changes instantly</p>
+                    </div>
+                </div>
+                <div class="feature-detail-content">
+                    <p>Never miss an important schedule update with our comprehensive notification system. Receive alerts about room changes, cancellations, new assignments, and more through multiple channels.</p>
+                    
+                    <div class="notification-list">
+                        <h3>Sample Notifications</h3>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4>Room Change</h4>
+                                <p>CS101 has been moved from Room A101 to Room A205 for today's class.</p>
+                                <small>10 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <i class="fas fa-calendar-times"></i>
+                            </div>
+                            <div>
+                                <h4>Class Cancelled</h4>
+                                <p>PHY101 lab session scheduled for Wednesday has been cancelled.</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <div>
+                                <h4>Faculty Change</h4>
+                                <p>Professor Smith will be substituting for Professor Johnson in MATH201 this week.</p>
+                                <small>1 day ago</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-benefits">
+                        <h3>Notification Options</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Multi-channel Delivery</h4>
+                                <p>Receive notifications via email, SMS, and push notifications</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Customizable Preferences</h4>
+                                <p>Choose which types of notifications you want to receive</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Emergency Alerts</h4>
+                                <p>Critical notifications override silent modes and do not disturb settings</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Scheduled Digest</h4>
+                                <p>Receive a daily or weekly summary of all schedule changes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="analytics" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('features')">
+                <i class="fas fa-arrow-left"></i> Back to Features
+            </div>
+            <div class="feature-detail">
+                <div class="feature-detail-header">
+                    <div class="feature-detail-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div>
+                        <h2>Analytics & Reports</h2>
+                        <p>Gain insights to optimize resource utilization</p>
+                    </div>
+                </div>
+                <div class="feature-detail-content">
+                    <p>Make data-driven decisions with our comprehensive analytics dashboard. Track room utilization, faculty workload, student attendance patterns, and identify opportunities for optimization.</p>
+                    
+                    <div class="feature-benefits">
+                        <h3>Key Reports</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Room Utilization</h4>
+                                <p>Identify underutilized spaces and optimize classroom assignments</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Faculty Workload</h4>
+                                <p>Ensure balanced teaching assignments across departments</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Student Schedule Analysis</h4>
+                                <p>Identify potential conflicts and optimize student course combinations</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Historical Trends</h4>
+                                <p>Compare current schedules with previous semesters for better planning</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-benefits">
+                        <h3>Export Options</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>PDF Reports</h4>
+                                <p>Generate professional reports for administrative review</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Excel Export</h4>
+                                <p>Download data for further analysis in spreadsheet applications</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Scheduled Reports</h4>
+                                <p>Automatically generate and email reports on a regular schedule</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Custom Dashboards</h4>
+                                <p>Create personalized views of the data that matters most to you</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="integration" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('features')">
+                <i class="fas fa-arrow-left"></i> Back to Features
+            </div>
+            <div class="feature-detail">
+                <div class="feature-detail-header">
+                    <div class="feature-detail-icon">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <div>
+                        <h2>Integration Ready</h2>
+                        <p>Seamlessly connect with existing university systems</p>
+                    </div>
+                </div>
+                <div class="feature-detail-content">
+                    <p>MVN University is designed to work with your existing technology infrastructure. Our platform offers robust APIs and pre-built connectors for popular university systems.</p>
+                    
+                    <div class="feature-benefits">
+                        <h3>Supported Integrations</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Student Information Systems</h4>
+                                <p>Sync student data, course registrations, and academic records</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Learning Management Systems</h4>
+                                <p>Connect with Canvas, Blackboard, Moodle, and other LMS platforms</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>HR Systems</h4>
+                                <p>Import faculty information, contracts, and availability</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Room Booking Systems</h4>
+                                <p>Coordinate with facility management and room reservation systems</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-benefits">
+                        <h3>Integration Features</h3>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>RESTful API</h4>
+                                <p>Comprehensive API for custom integrations and data exchange</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Single Sign-On</h4>
+                                <p>Support for SAML, OAuth, and other authentication protocols</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Data Sync</h4>
+                                <p>Automated synchronization to keep all systems up to date</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Custom Connectors</h4>
+                                <p>Development of specialized connectors for unique systems</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Page -->
+    <section id="how-it-works" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </div>
+            <div class="section-title">
+                <h2>How MVN University Works</h2>
+                <p>Our platform simplifies timetable management in just a few easy steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Input Course Data</h3>
+                    <p>Add courses, faculty, rooms, and student groups to the system. Import data from existing systems or manually enter information.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Generate Schedule</h3>
+                    <p>Use our algorithm to automatically create an optimal timetable that considers all constraints and preferences.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Review & Adjust</h3>
+                    <p>Review the generated schedule and make manual adjustments if needed using our intuitive drag-and-drop interface.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Publish & Share</h3>
+                    <p>Publish the final timetable and share it with students and faculty through multiple channels including web, mobile app, and email.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Page -->
+    <section id="testimonials" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </div>
+            <div class="section-title">
+                <h2>What Our Users Say</h2>
+                <p>MVN University faculty and students are already benefiting from our timetable management system</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "MVN University timetable system has cut our timetable creation time by 70%. The conflict detection feature alone has saved us countless hours of manual checking."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">NP</div>
+                        <div>
+                            <h4>NP Singh</h4>
+                            <p>Registrar, MVN University</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "As a faculty member, I love how easy it is to check my schedule and request changes. The mobile app is particularly useful when I'm on the go."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AS</div>
+                        <div>
+                            <h4>Amit Sagu</h4>
+                            <p>Professor of Computer Science</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "The student portal makes it so simple to view my class schedule and receive notifications about any changes. No more showing up to empty classrooms!"
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">BS</div>
+                        <div>
+                            <h4>Bhoomika Sharma</h4>
+                            <p>Student, Engineering Department</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "Implementation was seamless, and the support team was incredibly helpful throughout the process. Our faculty has adapted to the new system quickly."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AS</div>
+                        <div>
+                            <h4>Amit Sagu</h4>
+                            <p>IT Director, MVN University</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "The analytics feature has helped us optimize room usage and identify underutilized resources, saving our university thousands of dollars."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">NP</div>
+                        <div>
+                            <h4>NP Singh</h4>
+                            <p>Facilities Manager, MVN University</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "As an international student, having my timetable accessible on my phone in my local timezone has been incredibly helpful for planning my studies."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">GS</div>
+                        <div>
+                            <h4>Geeta Sharma</h4>
+                            <p>Graduate Student, Business School</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Page -->
+    <section id="contact" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </div>
+            <div class="section-title">
+                <h2>Contact Us</h2>
+                <p>Get in touch with our team for any questions or support requests</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p>Send us an email at info@mvnuniversity.com and we'll respond within 24 hours.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Call Us</h3>
+                    <p>Speak directly with our support team at +91 9876543210 during business hours.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Live Chat</h3>
+                    <p>Chat with our support team in real-time through our website during business hours.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Visit Us</h3>
+                    <p>MVN UNIVERSITY located at 74 km stone, NH-2, Delhi-Agra Highway NCR , Palwal, Haryana , 121105</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Page -->
+    <section id="login" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </div>
+            <div class="auth-form">
+                <h2>Login to Your Account</h2>
+                <div id="loginSuccess" class="success-message">
+                    <i class="fas fa-check-circle"></i> You have successfully logged in!
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <div class="form-options">
+                        <div>
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+                <div class="form-footer">
+                    <p>Don't have an account? <a onclick="showPage('signup')">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Signup Page -->
+    <section id="signup" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </div>
+            <div class="auth-form">
+                <h2>Create Your Account</h2>
+                <div id="signupSuccess" class="success-message">
+                    <i class="fas fa-check-circle"></i> You have successfully signed up!
+                </div>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userType">I am a:</label>
+                        <select id="userType" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty Member</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-options">
+                        <div>
+                            <input type="checkbox" id="agree" required>
+                            <label for="agree">I agree to the <a href="#">Terms of Service</a></label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                </form>
+                <div class="form-footer">
+                    <p>Already have an account? <a onclick="showPage('login')">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Page -->
+    <section id="demo" class="page">
+        <div class="container">
+            <div class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </div>
+            <div class="section-title">
+                <h2>Product Demo</h2>
+                <p>See MVN University timetable system in action with our comprehensive product demonstration</p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-animation">
+                    <div class="demo-screen">
+                        <div class="demo-header">
+                            <h3>MVN University Timetable</h3>
+                            <span>Computer Science Department</span>
+                        </div>
+                        <div class="demo-content">
+                            <table class="demo-timetable">
+                                <thead>
+                                    <tr>
+                                        <th>Time/Day</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>9:00 - 10:30</td>
+                                        <td><div class="demo-course">CS101 - A101</div></td>
+                                        <td></td>
+                                        <td><div class="demo-course">MATH201 - B205</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10:45 - 12:15</td>
+                                        <td><div class="demo-course">PHY101 - Lab 3</div></td>
+                                        <td><div class="demo-course">CS101 - A101</div></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1:15 - 2:45</td>
+                                        <td></td>
+                                        <td><div class="demo-course">MATH201 - B205</div></td>
+                                        <td><div class="demo-course">PHY101 - Lab 3</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="floating-element element-1">
+                        <i class="fas fa-bell"></i> New Notification
+                    </div>
+                    <div class="floating-element element-2">
+                        <i class="fas fa-chart-bar"></i> Analytics Ready
+                    </div>
+                    <div class="floating-element element-3">
+                        <i class="fas fa-mobile-alt"></i> Mobile Access
+                    </div>
+                </div>
+                <div class="demo-steps">
+                    <h3>What You'll Learn</h3>
+                    <div class="demo-step">
+                        <div class="demo-step-number">1</div>
+                        <div>
+                            <h4>Creating a New Timetable</h4>
+                            <p>See how easy it is to create a new timetable from scratch using our intuitive interface.</p>
+                        </div>
+                    </div>
+                    <div class="demo-step">
+                        <div class="demo-step-number">2</div>
+                        <div>
+                            <h4>Managing Courses and Faculty</h4>
+                            <p>Learn how to add courses, assign faculty, and manage teaching assignments.</p>
+                        </div>
+                    </div>
+                    <div class="demo-step">
+                        <div class="demo-step-number">3</div>
+                        <div>
+                            <h4>Conflict Detection and Resolution</h4>
+                            <p>Watch how our system automatically detects and helps resolve scheduling conflicts.</p>
+                        </div>
+                    </div>
+                    <div class="demo-step">
+                        <div class="demo-step-number">4</div>
+                        <div>
+                            <h4>Publishing and Sharing</h4>
+                            <p>See how to publish timetables and share them with students and faculty.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>MVN University</h3>
+                    <p>Simplifying timetable management for universities worldwide.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a onclick="showPage('features')">Features</a></li>
+                        <li><a onclick="showPage('how-it-works')">How It Works</a></li>
+                        <li><a onclick="showPage('testimonials')">Testimonials</a></li>
+                        <li><a onclick="showPage('contact')">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Support Center</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@mvnuniversity.com</li>
+                        <li><i class="fas fa-phone"></i> +91 9876543210</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 74 km stone, NH-2, Delhi-Agra Highway NCR , Palwal, Haryana , 121105</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 MVN University. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Page navigation functions
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show the selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        function showFeatureDetail(featureId) {
+            showPage(featureId);
+        }
+        
+        // Timetable selector
+        function showTimetable(id) {
+            // Hide all timetables
+            document.querySelectorAll('.timetable-container').forEach(table => {
+                table.style.display = 'none';
+            });
+            
+            // Show selected timetable
+            document.getElementById('timetable-' + id).style.display = 'block';
+            
+            // Update active button
+            document.querySelectorAll('.timetable-selector button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        // Form handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Login form submission
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                document.getElementById('loginSuccess').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('loginSuccess').style.display = 'none';
+                    showPage('home');
+                }, 2000);
+            });
+            
+            // Signup form submission
+            document.getElementById('signupForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                document.getElementById('signupSuccess').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('signupSuccess').style.display = 'none';
+                    showPage('home');
+                }, 2000);
+            });
+            
+            // Button click effects
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>   
